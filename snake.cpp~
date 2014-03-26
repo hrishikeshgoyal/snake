@@ -1,0 +1,146 @@
+//to compile
+//g++ -g snake.cpp -lcurses
+//to run ./a.out
+
+
+
+
+#include <curses.h>
+#include <cmath>
+#include <stdlib.h>
+
+using namespace std;
+struct pos 
+{int x,y;
+};
+
+class queue
+{
+public:
+pos a[20];
+int rear;
+int front ;
+int size;
+
+queue ()
+{size=20;rear =-1;front =-1;}
+void enQ (pos x);
+pos deQ();
+pos frnt_ele ();
+};
+
+
+
+
+
+void delay()
+{int c = 1, d = 1;
+ 
+   for ( c = 1 ; c <= 32767 ; c++ )
+       for ( d = 1 ; d <= 3276 ; d++ )
+       {}
+ 
+  
+}
+
+
+
+int main()
+{
+WINDOW *hg;
+hg=initscr();
+wborder(hg, 3, 10, 10, 10, 0, 0, 0, 0);
+cbreak();
+clear();
+pos head,tail,temp,fruit;
+queue q;
+for (int i=0;i<10;i++)
+{temp.x=i+70;temp.y=20;
+q.enQ(temp);
+}
+
+int snake=10;
+head.x=75,head.y=20,tail.x=70,tail.y=20;
+
+char initial[]="*****";
+//attron(A_STANDOUT);
+mvaddstr(20,70,initial);
+move (20,79);
+
+fruit.x=60;
+fruit.y=15;
+mvaddstr(15,60,"@");
+char control='d';
+//for (int r=0;r<10;r++)
+while (1)
+{
+ 	nodelay(hg, TRUE);
+ 	noecho();
+       	char temp;
+       
+       	  	delay();
+        if ((temp= getch()) == ERR);
+        else {control=temp;}
+       	
+       	
+       	if (control=='s')
+       	head.y++;
+       	else if (control=='d')
+       	head.x++;
+       	else if (control=='w')
+       	head.y--;
+       	else if (control=='a')
+       	head.x--;
+       	//else if (control=='p')
+       	//getch();
+      
+       	q.enQ(head);
+       	
+       	
+       	mvaddstr(head.y,head.x,"*");
+       	if (fruit.x==head.x&&fruit.y==head.y)
+       	{mvaddstr(abs(tail.y-10),abs(head.x-20),"@");
+       		tail=q.frnt_ele();}
+       	else {tail=q.deQ();}	
+       	mvaddstr(tail.y,tail.x," ");
+       	tail.x++;
+     
+       	
+       	
+       	wrefresh(stdscr);
+       	
+       	
+}
+
+refresh();
+getch();
+endwin();
+return 0;
+}
+
+
+void queue::enQ (pos x )
+{	
+	rear=(rear+1)%size;
+	a[rear]=x;
+		if (front==-1)
+		{front++;}
+	
+}
+
+
+pos queue::deQ()
+{
+
+	pos temp=a[front];
+		if(front==rear)
+		{front=-1;rear=-1;}
+		else 
+		{front=(front+1)%size;}
+	return temp;
+	
+}
+pos queue :: frnt_ele()
+{return a[front];
+}
+
